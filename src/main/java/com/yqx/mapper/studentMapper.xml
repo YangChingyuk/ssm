@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Student">
+	
+	<insert id="add" parameterType="Student">
+		insert into student(name,username,password,sex,age,birthday,creatTime)
+		values(#{name},#{username},#{password},#{sex},#{age},#{birthday},#{creatTime})
+	</insert>
+	
+	<insert id="addMore" parameterType="List">
+		insert into student(name,username,password,sex,age,birthday,creatTime)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.name},#{item.username},#{item.password},#{item.sex},#{item.age},#{item.birthday},#{item.creatTime})
+		</foreach>
+	</insert>
+	
+	<update id="update" parameterType="Student">
+		update student set
+		name = #{name},
+		username = #{username},
+		password = #{password},
+		sex = #{sex},
+		age = #{age},
+		birthday = #{birthday},
+		creatTime = #{creatTime}
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteById">
+		delete from student where id = #{id}
+	</delete>
+	
+	<delete id="deleteMore">
+		delete from student where id in 
+		<foreach collection="array" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<select id="queryById" parameterType="int" resultType="Student">
+		select * from student where id = #{id}
+	</select>
+	
+	<select id="queryAll" resultType="Student">
+		<!-- id小于100 -->
+		select * from student where id &lt; 100
+	</select>
+	
+	<select id="queryByPage" parameterType="map" resultType="Student">
+		select * from student limit #{start},#{pageSize}
+	</select>
+	
+	<select id="queryByUsername" resultType="Student">
+		select * from student where username like #{username}
+		<!-- select * from student where username like "%"#{username}"%" -->
+	</select>
+	
+	<select id="queryByPageAndCondition" parameterType="map" resultType="Student">
+		select * from student where username like #{username} limit #{start},#{pageSize}
+		<!-- select * from student where username like "%"#{username}"%" -->
+	</select>
+	
+	<select id="getTotals" resultType="int">
+		select count(*) from student
+	</select>
+	
+</mapper>
